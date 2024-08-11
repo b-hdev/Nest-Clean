@@ -29,7 +29,7 @@ export class ChooseQuestionBestAnswerUseCase {
     const answer = await this.answersRepository.findById(answerId);
 
     if (!answer) {
-      return new ResourceNotFoundError();
+      return left(new ResourceNotFoundError());
     }
 
     const question = await this.questionsRepository.findById(
@@ -37,7 +37,7 @@ export class ChooseQuestionBestAnswerUseCase {
     );
 
     if (!question) {
-      return new ResourceNotFoundError();
+      return left(new ResourceNotFoundError());
     }
 
     if (authorId !== question.authorId.toString()) {
