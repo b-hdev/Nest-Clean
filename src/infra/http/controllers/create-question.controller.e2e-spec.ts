@@ -1,5 +1,5 @@
-import { AppModule } from '@/app.module';
-import { PrismaService } from '@/prisma/prisma.service';
+import { AppModule } from '@/infra/app.module';
+import { PrismaService } from '@/infra/prisma/prisma.service';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -23,7 +23,7 @@ describe('Create question (E2E)', () => {
     await app.init();
   });
 
-  test('[POST] /questions', async () => {
+  test('[POST] /v1/questions', async () => {
     const user = await prisma.user.create({
       data: {
         name: 'John Doe',

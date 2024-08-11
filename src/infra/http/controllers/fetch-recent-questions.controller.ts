@@ -1,8 +1,8 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
-import { ZodValidationPipe } from '@/pipes/zod-validation-pipes';
-import { PrismaService } from '@/prisma/prisma.service';
 import { z } from 'zod';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipes';
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
+import { PrismaService } from '@/infra/prisma/prisma.service';
 
 const pageQueryParamSchema = z
   .string()
@@ -15,12 +15,12 @@ const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema);
 
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>;
 
-@Controller('/questions')
+@Controller('/v1')
 @UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
   constructor(private prisma: PrismaService) {}
 
-  @Get()
+  @Get('/questions')
   async handle(@Query('page', queryValidationPipe) page: PageQueryParamSchema) {
     const perPage = 20;
 
