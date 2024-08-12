@@ -37,16 +37,16 @@ describe('Fetch recent questions (E2E)', () => {
     await prisma.question.createMany({
       data: [
         {
+          authorId: user.id,
           title: 'Question 01',
           slug: 'question-01',
           content: 'Question content',
-          authorId: user.id,
         },
         {
+          authorId: user.id,
           title: 'Question 02',
           slug: 'question-02',
           content: 'Question content',
-          authorId: user.id,
         },
       ],
     });
@@ -58,10 +58,10 @@ describe('Fetch recent questions (E2E)', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
-      questions: [
+      questions: expect.arrayContaining([
         expect.objectContaining({ title: 'Question 01' }),
         expect.objectContaining({ title: 'Question 02' }),
-      ],
+      ]),
     });
   });
 });

@@ -2,7 +2,7 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipes';
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
 import { z } from 'zod';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions';
 
 const pageQueryParamSchema = z
   .string()
@@ -18,18 +18,12 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>;
 @Controller('/v1')
 @UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private fetchRecentQuestion: FetchRecentQuestionsUseCase) {}
 
   @Get('/questions')
   async handle(@Query('page', queryValidationPipe) page: PageQueryParamSchema) {
-    const perPage = 20;
-
-    const questions = await this.prisma.question.findMany({
-      take: perPage,
-      // skip: (page - 1) * perPage, ## View to fix this issue error
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const questions = await this.fetchRecentQuestion.execute({
+      page,
     });
 
     return { questions };
