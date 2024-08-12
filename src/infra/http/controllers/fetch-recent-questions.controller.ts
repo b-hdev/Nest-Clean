@@ -1,8 +1,8 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipes';
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
-import { PrismaService } from '@/infra/prisma/prisma.service';
 import { z } from 'zod';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
 const pageQueryParamSchema = z
   .string()
@@ -26,7 +26,7 @@ export class FetchRecentQuestionsController {
 
     const questions = await this.prisma.question.findMany({
       take: perPage,
-      skip: (page - 1) * perPage,
+      // skip: (page - 1) * perPage, ## View to fix this issue error
       orderBy: {
         createdAt: 'desc',
       },

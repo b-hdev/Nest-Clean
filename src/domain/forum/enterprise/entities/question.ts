@@ -11,7 +11,7 @@ export interface QuestionProps {
   title: string;
   content: string;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt?: Date | null;
   authorId: UniqueEntityID;
   bestAnswerId?: UniqueEntityID;
   attachments: QuestionAttachmentList;
