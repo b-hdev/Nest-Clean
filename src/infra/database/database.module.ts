@@ -30,7 +30,6 @@ import { PrismaAnswerRepository } from './prisma/repositories/prisma-answer-repo
     PrismaAnswerRepository,
     PrismaQuestionAttachmentsRepository,
     PrismaQuestionCommentsRepository,
-    PrismaQuestionRepository,
   ],
   exports: [
     PrismaService,

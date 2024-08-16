@@ -20,5 +20,6 @@ import { JwtEncrypter } from './jwt-encrypter';
       useClass: BcryptHasher,
     },
   ],
+  exports: [Encrypter, HashComparer, HashGenerator],
 })
 export class CryptographyModule {}
