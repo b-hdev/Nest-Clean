@@ -7,7 +7,7 @@ import { AnswerCreatedEvent } from '@/domain/forum/enterprise/events/answer-crea
 export interface AnswerProps {
   content: string;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt?: Date | null;
   attachments: AnswerAttachmentList;
   authorId: UniqueEntityID;
   questionId: UniqueEntityID;
