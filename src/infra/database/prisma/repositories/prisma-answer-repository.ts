@@ -3,7 +3,9 @@ import { AnswerRepository } from '@/domain/forum/application/repositories/answer
 import { Answer } from '@/domain/forum/enterprise/entities/answer';
 import { PrismaAnswerMapper } from '../mappers/prisma-answer-mapper';
 import { PrismaService } from '../prisma.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PrismaAnswerRepository implements AnswerRepository {
   constructor(private readonly prisma: PrismaService) {}
 

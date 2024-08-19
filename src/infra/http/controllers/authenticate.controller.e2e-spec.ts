@@ -32,7 +32,7 @@ describe('Authenticate (E2E)', () => {
       .post('/v1/sessions')
       .send({
         email: 'johndoe@example.com',
-        password: '123456',
+        password: '123456@',
       });
 
     expect(response.statusCode).toBe(201);

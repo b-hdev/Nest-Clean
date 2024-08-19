@@ -65,6 +65,7 @@ export class Question extends AggregateRoot<QuestionProps> {
   set title(title: string) {
     this.props.title = title;
     this.props.slug = Slug.createFromText(title);
+
     this.touch();
   }
 

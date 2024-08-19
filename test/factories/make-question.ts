@@ -4,10 +4,12 @@ import {
   Question,
   QuestionProps,
 } from '@/domain/forum/enterprise/entities/question';
-import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug';
 import { PrismaQuestionMapper } from '@/infra/database/prisma/mappers/prisma-question-mapper';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+
+// Unused slug setting
+// import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug';
 
 export function makeQuestion(
   override: Partial<QuestionProps> = {},
@@ -16,7 +18,7 @@ export function makeQuestion(
   const question = Question.create(
     {
       title: faker.lorem.sentence(),
-      slug: Slug.create('example-question'),
+      // slug: Slug.create('example-question'),
       authorId: new UniqueEntityID(),
       content: faker.lorem.text(),
       ...override,
