@@ -30,11 +30,11 @@ describe('Upload Attachment (E2E)', () => {
     const accessToken = jwt.sign({ sub: user.id.toString() });
 
     const response = await request(app.getHttpServer())
-      .get('/v1/attachments')
+      .post('/v1/attachments')
       .set('Authorization', `Bearer ${accessToken}`)
       .attach('file', './test/e2e/file.png');
 
     expect(response.statusCode).toBe(201);
   });
 });
-test\e2e\file.png
+// test\e2e\file.png
