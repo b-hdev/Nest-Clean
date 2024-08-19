@@ -3,6 +3,7 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { StudentFactory } from 'test/factories/make-student';
 
 describe('Create Account (E2E)', () => {
   let app: INestApplication;
@@ -11,6 +12,7 @@ describe('Create Account (E2E)', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
+      providers: [StudentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();

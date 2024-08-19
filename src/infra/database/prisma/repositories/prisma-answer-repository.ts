@@ -1,10 +1,10 @@
 import { PaginationParams } from '@/core/repositories/pagination-params';
-import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository';
+import { AnswerRepository } from '@/domain/forum/application/repositories/answer-repository';
 import { Answer } from '@/domain/forum/enterprise/entities/answer';
 import { PrismaAnswerMapper } from '../mappers/prisma-answer-mapper';
 import { PrismaService } from '../prisma.service';
 
-export class PrismaAnswerRepository implements AnswersRepository {
+export class PrismaAnswerRepository implements AnswerRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Answer | null> {
@@ -59,7 +59,7 @@ export class PrismaAnswerRepository implements AnswersRepository {
   }
 
   async delete(answer: Answer): Promise<void> {
-    await this.prisma.question.delete({
+    await this.prisma.answer.delete({
       where: {
         id: answer.id.toString(),
       },

@@ -1,4 +1,4 @@
-import { AnswersRepository } from '../repositories/answers-repository';
+import { AnswerRepository } from '../repositories/answer-repository';
 import { Question } from '@/domain/forum/enterprise/entities/question';
 import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository';
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error';
@@ -19,7 +19,7 @@ type ChooseQuestionBestAnswerUseCaseResponse = Either<
 export class ChooseQuestionBestAnswerUseCase {
   constructor(
     private questionsRepository: QuestionsRepository,
-    private answersRepository: AnswersRepository,
+    private answersRepository: AnswerRepository,
   ) {}
 
   async execute({

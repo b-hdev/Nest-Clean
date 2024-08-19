@@ -5,49 +5,58 @@ import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { QuestionFactory } from 'test/factories/make-question';
 import { StudentFactory } from 'test/factories/make-student';
 
-describe('Create question (E2E)', () => {
+describe('Answer question (E2E)', () => {
   let app: INestApplication;
-  let jwt: JwtService;
   let prisma: PrismaService;
   let studentFactory: StudentFactory;
+  let questionFactory: QuestionFactory;
+  let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory],
+      providers: [StudentFactory, QuestionFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
-    jwt = moduleRef.get(JwtService);
+
     prisma = moduleRef.get(PrismaService);
     studentFactory = moduleRef.get(StudentFactory);
+    questionFactory = moduleRef.get(QuestionFactory);
+    jwt = moduleRef.get(JwtService);
 
     await app.init();
   });
 
-  test('[POST] /v1/questions', async () => {
+  test('[POST] /v1/questions/:questionId/answers/:answerId', async () => {
     const user = await studentFactory.makePrismaStudent();
 
     const accessToken = jwt.sign({ sub: user.id.toString() });
 
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id,
+    });
+
+    const questionId = question.id.toString();
+
     const response = await request(app.getHttpServer())
-      .post('/v1/questions')
+      .post(`/v1/questions/${questionId}/answers/${questionId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        title: 'New question',
-        content: 'Question content',
+        content: 'New answer',
       });
 
     expect(response.statusCode).toBe(201);
 
-    const questionOnDatabase = await prisma.question.findFirst({
+    const answerOnDatabase = await prisma.answer.findFirst({
       where: {
-        title: 'New question',
+        content: 'New answer',
       },
     });
 
-    expect(questionOnDatabase).toBeTruthy();
+    expect(answerOnDatabase).toBeTruthy();
   });
 });

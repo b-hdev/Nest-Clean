@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/questions-attachments-repository';
-import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment';
-import { PrismaQuestionAttachmentMapper } from '../mappers/prisma-question-attachment-mapper';
+import { StudentsRepository } from '@/domain/forum/application/repositories/students-repository';
+import { Student } from '@/domain/forum/enterprise/entities/student';
+import { PrismaStudentMapper } from '../mappers/prisma-student-mapper';
 
 @Injectable()
-export class PrismaQuestionAttachmentsRepository
-  implements QuestionAttachmentsRepository
-{
+export class PrismaStudentsRepository implements StudentsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findManyByQuestionId(
-    questionId: string,
-  ): Promise<QuestionAttachment[]> {
-    const questionAttachments = await this.prisma.attachment.findMany({
+  async findByEmail(email: string): Promise<Student | null> {
+    const student = await this.prisma.user.findUnique({
       where: {
-        questionId,
+        email,
       },
     });
 
-    return questionAttachments.map(PrismaQuestionAttachmentMapper.toDomain);
+    if (!student) {
+      return null;
+    }
+
+    return PrismaStudentMapper.toDomain(student);
   }
 
-  async deleteManyByQuestionId(questionId: string): Promise<void> {
-    await this.prisma.attachment.deleteMany({
-      where: {
-        questionId,
-      },
+  async create(student: Student): Promise<void> {
+    const data = PrismaStudentMapper.toPrisma(student);
+
+    await this.prisma.user.create({
+      data,
     });
   }
 }

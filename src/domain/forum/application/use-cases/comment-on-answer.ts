@@ -1,4 +1,4 @@
-import { AnswersRepository } from '../repositories/answers-repository';
+import { AnswerRepository } from '../repositories/answer-repository';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment';
 import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository';
@@ -19,7 +19,7 @@ type CommentOnAnswerUseCaseResponse = Either<
 >;
 export class CommentOnAnswerUseCase {
   constructor(
-    private answersRepository: AnswersRepository,
+    private answersRepository: AnswerRepository,
     private answerCommentsRepository: AnswerCommentsRepository,
   ) {}
 
