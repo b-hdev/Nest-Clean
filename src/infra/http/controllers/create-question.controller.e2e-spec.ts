@@ -5,6 +5,7 @@ import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { AttachmentFactory } from 'test/factories/make-attachment';
 import { StudentFactory } from 'test/factories/make-student';
 
 describe('Create question (E2E)', () => {
@@ -12,17 +13,19 @@ describe('Create question (E2E)', () => {
   let jwt: JwtService;
   let prisma: PrismaService;
   let studentFactory: StudentFactory;
+  let attachmentFactory: AttachmentFactory;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory],
+      providers: [StudentFactory, AttachmentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
     jwt = moduleRef.get(JwtService);
     prisma = moduleRef.get(PrismaService);
     studentFactory = moduleRef.get(StudentFactory);
+    attachmentFactory = moduleRef.get(AttachmentFactory);
 
     await app.init();
   });
@@ -32,12 +35,19 @@ describe('Create question (E2E)', () => {
 
     const accessToken = jwt.sign({ sub: user.id.toString() });
 
+    const attachmentFirst = await attachmentFactory.makePrismaAttachment();
+    const attachmentSecond = await attachmentFactory.makePrismaAttachment();
+
     const response = await request(app.getHttpServer())
       .post('/v1/questions')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         title: 'New question',
         content: 'Question content',
+        attachments: [
+          attachmentFirst.id.toString(),
+          attachmentSecond.id.toString(),
+        ],
       });
 
     expect(response.statusCode).toBe(201);
@@ -49,5 +59,13 @@ describe('Create question (E2E)', () => {
     });
 
     expect(questionOnDatabase).toBeTruthy();
+
+    const attachmentsOnDatabase = await prisma.attachment.findMany({
+      where: {
+        questionId: questionOnDatabase?.id,
+      },
+    });
+
+    expect(attachmentsOnDatabase).toHaveLength(2);
   });
 });
