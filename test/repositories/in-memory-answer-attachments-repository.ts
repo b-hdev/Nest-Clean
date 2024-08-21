@@ -4,6 +4,10 @@ import { AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-atta
 export class InMemoryAnswerAttachmentsRepository
   implements AnswerAttachmentsRepository
 {
+  createMany(attachment: AnswerAttachment[]): Promise<void> {
+    this.items.push(...attachment);
+  }
+
   public items: AnswerAttachment[] = [];
 
   async findManyByAnswerId(answerId: string) {
@@ -12,6 +16,14 @@ export class InMemoryAnswerAttachmentsRepository
     );
 
     return answerAttachments;
+  }
+
+  deleteMany(attachments: AnswerAttachment[]): Promise<void> {
+    const answerAttachments = this.items.filter((item) => {
+      return !attachments.some((attachment) => attachment.equals(item));
+    });
+
+    this.items = answerAttachments;
   }
 
   async deleteManyByAnswerId(answerId: string) {
